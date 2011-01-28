@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.persist.Transactional;
-import com.google.inject.persist.UnitOfWork;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -33,22 +32,21 @@ public class TransactionalClassTest {
       }
     }, new JdbcPersistModule());
 
-    FooDao dao = injector.getInstance(FooDao.class);
-    assertTrue(dao.getFoos().isEmpty());
-    dao.addFoo(new Foo(1, "abc"));
-    assertEquals(1, dao.getFoos().size());
+    FooRepository repository = injector.getInstance(FooRepository.class);
+    assertTrue(repository.getFoos().isEmpty());
+    repository.addFoo(new Foo(1, "abc"));
+    assertEquals(1, repository.getFoos().size());
   }
 
   @Transactional
-  public static class FooDao {
+  public static class FooRepository {
     private final Provider<Connection> connectionProvider;
 
-    @Inject public FooDao(Provider<Connection> connectionProvider) {
+    @Inject public FooRepository(Provider<Connection> connectionProvider) {
       this.connectionProvider = connectionProvider;
     }
 
     public List<Foo> getFoos() {
-      System.out.println("Calling provider");
       Connection conn = connectionProvider.get();
       try {
         PreparedStatement pS = conn.prepareStatement("SELECT * FROM foo");

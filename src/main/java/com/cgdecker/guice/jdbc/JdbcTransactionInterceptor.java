@@ -4,6 +4,8 @@ import com.google.inject.persist.Transactional;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
+import java.sql.SQLException;
+
 import javax.inject.Inject;
 
 /**
@@ -12,12 +14,10 @@ import javax.inject.Inject;
  * @author cgdecker@gmail.com (Colin Decker)
  */
 class JdbcTransactionInterceptor implements MethodInterceptor {
-  @Inject JdbcPersistService persistService;
+  @Inject private JdbcPersistService persistService;
   private final ThreadLocal<Boolean> workStarted = new ThreadLocal<Boolean>();
 
   public Object invoke(MethodInvocation invocation) throws Throwable {
-    System.out.println("Invoking transactional method: " + invocation.getMethod());
-
     startWorkIfNecessary();
 
     JdbcConnectionManager connectionManager = persistService.get();
@@ -45,7 +45,6 @@ class JdbcTransactionInterceptor implements MethodInterceptor {
    */
   private void startWorkIfNecessary() {
     if (!persistService.isWorking()) {
-      System.out.println("Starting work before starting transaction");
       persistService.begin();
       workStarted.set(true);
     }
@@ -56,7 +55,6 @@ class JdbcTransactionInterceptor implements MethodInterceptor {
    */
   private void endWorkIfNecessary() {
     if (workStarted.get() != null) {
-      System.out.println("Ending work after completing transaction");
       workStarted.remove();
       persistService.end();
     }
@@ -103,7 +101,8 @@ class JdbcTransactionInterceptor implements MethodInterceptor {
   /**
    * Checks if a rollback should occur based on the type of exception and the given metadata. A
    * rollback should only occur if the exception is both a type that should be rolled back on and
-   * not a type that should be ignored.
+   * not a type that should be ignored. In addition to any types defined in the metadata, we always
+   * roll back on {@link SQLException}s unless the metadata specifies that it should be ignored.
    *
    * @param e        the exception that occurred
    * @param metadata the metadata telling what types of exceptions should cause rollbacks and what
@@ -112,7 +111,8 @@ class JdbcTransactionInterceptor implements MethodInterceptor {
    *         committed
    */
   private static boolean shouldRollback(Exception e, Transactional metadata) {
-    return isInstance(e, metadata.rollbackOn()) && !isInstance(e, metadata.ignore());
+    return (isInstance(e, metadata.rollbackOn()) || SQLException.class.isInstance(e)) &&
+        !isInstance(e, metadata.ignore());
   }
 
   /**

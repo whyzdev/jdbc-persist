@@ -12,7 +12,10 @@ import javax.sql.DataSource;
 
 /**
  * Manages a single {@link Connection} and its transaction state. This class is not thread-safe and
- * each instance is intended to be used from a single thread.
+ * each instance is intended to be used from a single thread. The primary reason for this wrapper is
+ * so that we can "start" a transaction without having to actually retrieve the {@code Connection}
+ * from the {@link DataSource}. In cases where a high level class is annotated with
+ * {@code @Transactional}, a method might start a transaction but no work be done
  *
  * @author cgdecker@gmail.com (Colin Decker)
  */
@@ -32,10 +35,9 @@ class JdbcConnectionManager implements Provider<Connection> {
    * {@link com.google.inject.persist.Transactional @Transactional} annotation.
    *
    * @return the managed connection.
-   * @throws JdbcException if an error occurs getting the connection from the data source.
+   * @throws ProvisionException if an error occurs getting the connection from the data source.
    */
   public Connection get() {
-    System.out.println("Getting connection");
     if (!transaction.isActive()) {
       throw new ProvisionException("No transaction active on the current thread--be sure the " +
           "method or class you're using the Connection in is annotated with @Transactional.");
@@ -57,7 +59,6 @@ class JdbcConnectionManager implements Provider<Connection> {
    * Closes the managed connection, if it was ever used.
    */
   public void close() {
-    System.out.println("Closing connection");
     if (connection != null) {
       try {
         connection.close();
@@ -80,7 +81,6 @@ class JdbcConnectionManager implements Provider<Connection> {
     private boolean active;
 
     public void begin() {
-      System.out.println("Starting transaction");
       active = true;
       if (connection != null) {
         try {
@@ -92,7 +92,6 @@ class JdbcConnectionManager implements Provider<Connection> {
     }
 
     public void commit() {
-      System.out.println("Committing transaction");
       active = false;
       if (connection != null) {
         try {
@@ -104,7 +103,6 @@ class JdbcConnectionManager implements Provider<Connection> {
     }
 
     public void rollback() {
-      System.out.println("Rolling back transaction");
       active = false;
       if (connection != null) {
         try {

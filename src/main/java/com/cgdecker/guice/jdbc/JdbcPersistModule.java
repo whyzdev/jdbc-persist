@@ -1,7 +1,6 @@
 package com.cgdecker.guice.jdbc;
 
 import com.google.inject.Scopes;
-import com.google.inject.matcher.Matchers;
 import com.google.inject.persist.PersistModule;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.Transactional;
@@ -34,6 +33,8 @@ public class JdbcPersistModule extends PersistModule {
     bind(Connection.class).toProvider(JdbcConnectionManager.class);
 
     requestInjection(transactionInterceptor);
+
+    // TODO: Remove this once issue 525 is fixed in Guice.
     bindInterceptor(annotatedWith(Transactional.class), any(), transactionInterceptor);
   }
 

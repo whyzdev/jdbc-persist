@@ -12,7 +12,7 @@ import javax.sql.DataSource;
  */
 class JdbcPersistService implements Provider<JdbcConnectionManager>, PersistService, UnitOfWork {
   private final DataSource dataSource;
-  private final ThreadLocal<JdbcConnectionManager> connectionManager = new ThreadLocal<JdbcConnectionManager>();
+  private final ThreadLocal<JdbcConnectionManager> connectionManagerThreadLocal = new ThreadLocal<JdbcConnectionManager>();
 
   @Inject JdbcPersistService(DataSource dataSource) {
     this.dataSource = dataSource;
@@ -35,16 +35,16 @@ class JdbcPersistService implements Provider<JdbcConnectionManager>, PersistServ
           "called UnitOfWork.begin() twice without a balancing call to end() in between.");
     }
 
-    connectionManager.set(new JdbcConnectionManager(dataSource));
+    connectionManagerThreadLocal.set(new JdbcConnectionManager(dataSource));
   }
 
   public void end() {
-    JdbcConnectionManager manager = connectionManager.get();
+    JdbcConnectionManager manager = connectionManagerThreadLocal.get();
 
     if (manager == null)
       return;
 
-    connectionManager.remove();
+    connectionManagerThreadLocal.remove();
     manager.close();
   }
 
@@ -52,14 +52,12 @@ class JdbcPersistService implements Provider<JdbcConnectionManager>, PersistServ
    * @return {@code true} if work is currently active on the current thread; {@code false} otherwise.
    */
   public boolean isWorking() {
-    return connectionManager.get() != null;
+    return connectionManagerThreadLocal.get() != null;
   }
 
   public JdbcConnectionManager get() {
     if (!isWorking())
       begin();
-
-    System.out.println("Getting connection manager");
-    return connectionManager.get();
+    return connectionManagerThreadLocal.get();
   }
 }
