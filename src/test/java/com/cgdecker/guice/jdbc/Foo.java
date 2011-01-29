@@ -1,5 +1,7 @@
 package com.cgdecker.guice.jdbc;
 
+import com.google.common.base.Objects;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,11 +27,21 @@ class Foo {
     return name;
   }
 
+  @Override public boolean equals(Object obj) {
+    if (!(obj instanceof Foo)) return false;
+    Foo other = (Foo) obj;
+    return id == other.id && Objects.equal(name, other.name);
+  }
+
+  @Override public int hashCode() {
+    return Objects.hashCode(id, name);
+  }
+
   @Override public String toString() {
-    return "Foo{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        '}';
+    return Objects.toStringHelper(this)
+        .add("id", id)
+        .add("name", name)
+        .toString();
   }
 
   static List<Foo> fromResultSet(ResultSet rS) throws SQLException {

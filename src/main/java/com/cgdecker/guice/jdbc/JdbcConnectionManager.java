@@ -35,18 +35,14 @@ class JdbcConnectionManager implements Provider<Connection> {
    * {@link com.google.inject.persist.Transactional @Transactional} annotation.
    *
    * @return the managed connection.
-   * @throws ProvisionException if an error occurs getting the connection from the data source.
+   * @throws JdbcException if an error occurs getting the connection from the data source.
    */
   public Connection get() {
-    if (!transaction.isActive()) {
-      throw new ProvisionException("No transaction active on the current thread--be sure the " +
-          "method or class you're using the Connection in is annotated with @Transactional.");
-    }
-    
+    System.out.println("get connection");
     if (connection == null) {
       try {
         connection = dataSource.getConnection();
-        if (connection.getAutoCommit())
+        if (transaction.isActive() && connection.getAutoCommit())
           connection.setAutoCommit(false);
       } catch (SQLException e) {
         throw new JdbcException(e);
@@ -96,6 +92,7 @@ class JdbcConnectionManager implements Provider<Connection> {
       if (connection != null) {
         try {
           connection.commit();
+          connection.setAutoCommit(true);
         } catch (SQLException e) {
           throw new JdbcException(e);
         }
@@ -107,6 +104,7 @@ class JdbcConnectionManager implements Provider<Connection> {
       if (connection != null) {
         try {
           connection.rollback();
+          connection.setAutoCommit(true);
         } catch (SQLException e) {
           throw new JdbcException(e);
         }

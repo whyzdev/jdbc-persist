@@ -30,15 +30,19 @@ class JdbcPersistService implements Provider<JdbcConnectionManager>, PersistServ
   }
 
   public void begin() {
+    System.out.println("begin work");
     if (isWorking()) {
       throw new IllegalStateException("Work already begun on this thread. Looks like you have " +
           "called UnitOfWork.begin() twice without a balancing call to end() in between.");
     }
 
+    //new Exception().printStackTrace();
+
     connectionManagerThreadLocal.set(new JdbcConnectionManager(dataSource));
   }
 
   public void end() {
+    System.out.println("end work");
     JdbcConnectionManager manager = connectionManagerThreadLocal.get();
 
     if (manager == null)
@@ -56,6 +60,7 @@ class JdbcPersistService implements Provider<JdbcConnectionManager>, PersistServ
   }
 
   public JdbcConnectionManager get() {
+    System.out.println("Get connection manager");
     if (!isWorking())
       begin();
     return connectionManagerThreadLocal.get();
