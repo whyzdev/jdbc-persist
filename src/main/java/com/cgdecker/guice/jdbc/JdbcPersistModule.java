@@ -15,7 +15,7 @@ import static com.google.inject.matcher.Matchers.annotatedWith;
 import static com.google.inject.matcher.Matchers.any;
 
 /**
- * JDBC provider for guice-persist. Requires that a binding for a {@link DataSource}.
+ * JDBC provider for guice-persist. Requires a binding for a {@link DataSource}.
  *
  * @author cgdecker@gmail.com (Colin Decker)
  */

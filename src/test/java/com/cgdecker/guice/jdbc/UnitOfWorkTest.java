@@ -70,4 +70,13 @@ public class UnitOfWorkTest extends AbstractPersistTest {
       assertEquals(IllegalStateException.class, expected.getCause().getClass());
     }
   }
+
+  @Test public void retrievingConnectionOutsideUnitOfWorkIsIllegal() {
+    try {
+      injector.getInstance(Connection.class);
+      fail();
+    } catch (ProvisionException e) {
+      assertEquals(IllegalStateException.class, e.getCause().getClass());
+    }
+  }
 }

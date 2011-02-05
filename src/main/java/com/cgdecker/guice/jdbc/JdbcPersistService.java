@@ -31,8 +31,10 @@ class JdbcPersistService implements Provider<Connection>, PersistService, UnitOf
   }
 
   public void stop() {
-    // Nothing to do here either. Some DataSources have a close() method, but it's not part of the
-    // interface so....
+    /*
+     * Nothing to do here either. Some DataSources have a close() method, but it's not part of the
+     * interface so....
+     */
   }
 
   public void begin() {
