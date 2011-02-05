@@ -4,15 +4,20 @@ import com.google.inject.Provider;
 import com.google.inject.persist.PersistService;
 import com.google.inject.persist.UnitOfWork;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
 /**
  * @author cgdecker@gmail.com (Colin Decker)
  */
-class JdbcPersistService implements Provider<JdbcConnectionManager>, PersistService, UnitOfWork {
+class JdbcPersistService implements Provider<Connection>, PersistService, UnitOfWork {
   private final DataSource dataSource;
-  private final ThreadLocal<JdbcConnectionManager> connectionManagerThreadLocal = new ThreadLocal<JdbcConnectionManager>();
+  private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<Connection>();
+
+  private final ThreadLocal<Integer> beginCountThreadLocal = new ThreadLocal<Integer>();
 
   @Inject JdbcPersistService(DataSource dataSource) {
     this.dataSource = dataSource;
@@ -26,43 +31,63 @@ class JdbcPersistService implements Provider<JdbcConnectionManager>, PersistServ
   }
 
   public void stop() {
-    // Nothing to do here either.
+    // Nothing to do here either. Some DataSources have a close() method, but it's not part of the
+    // interface so....
   }
 
   public void begin() {
-    System.out.println("begin work");
-    if (isWorking()) {
-      throw new IllegalStateException("Work already begun on this thread. Looks like you have " +
-          "called UnitOfWork.begin() twice without a balancing call to end() in between.");
+    if (!isWorking()) {
+      connectionThreadLocal.set(getConnection());
+      beginCountThreadLocal.set(1);
+    } else {
+      beginCountThreadLocal.set(beginCountThreadLocal.get() + 1);
     }
-
-    //new Exception().printStackTrace();
-
-    connectionManagerThreadLocal.set(new JdbcConnectionManager(dataSource));
   }
 
   public void end() {
-    System.out.println("end work");
-    JdbcConnectionManager manager = connectionManagerThreadLocal.get();
-
-    if (manager == null)
+    Integer beginCount = beginCountThreadLocal.get();
+    if (beginCount == null)
       return;
 
-    connectionManagerThreadLocal.remove();
-    manager.close();
+    beginCountThreadLocal.set(--beginCount);
+
+    if (beginCount == 0) {
+      closeConnection(connectionThreadLocal.get());
+      connectionThreadLocal.remove();
+      beginCountThreadLocal.remove();
+    }
   }
 
   /**
    * @return {@code true} if work is currently active on the current thread; {@code false} otherwise.
    */
   public boolean isWorking() {
-    return connectionManagerThreadLocal.get() != null;
+    return connectionThreadLocal.get() != null;
   }
 
-  public JdbcConnectionManager get() {
-    System.out.println("Get connection manager");
-    if (!isWorking())
-      begin();
-    return connectionManagerThreadLocal.get();
+  public Connection get() {
+    Connection result = connectionThreadLocal.get();
+    if (result == null) {
+      throw new IllegalStateException("No UnitOfWork active while attempting to retrieve Connection. " +
+          "Be sure to call UnitOfWork.begin() before retrieving a Connection or that you retrieve " +
+          "the Connection in a @Transactional method.");
+    }
+    return result;
+  }
+
+  private Connection getConnection() {
+    try {
+      return dataSource.getConnection();
+    } catch (SQLException e) {
+      throw new JdbcException(e);
+    }
+  }
+
+  private void closeConnection(Connection conn) {
+    try {
+      conn.close();
+    } catch (SQLException e) {
+      throw new JdbcException(e);
+    }
   }
 }

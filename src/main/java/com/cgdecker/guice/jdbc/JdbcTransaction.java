@@ -1,16 +1,55 @@
 package com.cgdecker.guice.jdbc;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
  * @author cgdecker@gmail.com (Colin Decker)
  */
-interface JdbcTransaction {
-  void begin();
+class JdbcTransaction {
+  private final Connection connection;
 
-  void commit();
+  JdbcTransaction(Connection connection) {
+    this.connection = connection;
+  }
 
-  void rollback();
+  public void begin() {
+    if (connection != null) {
+      try {
+        connection.setAutoCommit(false);
+      } catch (SQLException e) {
+        throw new JdbcException(e);
+      }
+    }
+  }
 
-  boolean isActive();
+  public void commit() {
+    if (connection != null) {
+      try {
+        connection.commit();
+        connection.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new JdbcException(e);
+      }
+    }
+  }
+
+  public void rollback() {
+    if (connection != null) {
+      try {
+        connection.rollback();
+        connection.setAutoCommit(true);
+      } catch (SQLException e) {
+        throw new JdbcException(e);
+      }
+    }
+  }
+
+  public boolean isActive() {
+    try {
+      return !connection.getAutoCommit();
+    } catch (SQLException e) {
+      throw new JdbcException(e);
+    }
+  }
 }

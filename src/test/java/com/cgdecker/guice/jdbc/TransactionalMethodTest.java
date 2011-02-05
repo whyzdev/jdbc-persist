@@ -19,8 +19,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author cgdecker@gmail.com (Colin Decker)
  */
-public class TransactionalClassTest extends AbstractPersistTest {
-
+public class TransactionalMethodTest extends AbstractPersistTest {
   @Test public void transactionsStartAndEndAroundMethods() throws SQLException {
     getUnitOfWork().begin();
     assertTransactionNotActive();
@@ -72,16 +71,15 @@ public class TransactionalClassTest extends AbstractPersistTest {
     testRollbackDoesNotOccur(IgnoredRuntimeExceptionThrowingRepository.class, IllegalStateException.class);
   }
 
-  @Transactional
   public static class TransactionChecker {
     @Inject private Provider<Connection> connectionProvider;
 
-    public void checkForActiveTransaction(TransactionalClassTest test) {
+    @Transactional
+    public void checkForActiveTransaction(AbstractPersistTest test) {
       test.assertTransactionActive();
     }
   }
 
-  @Transactional
   public static class NonThrowingRepository {
     private final Provider<Connection> connectionProvider;
 
@@ -89,12 +87,12 @@ public class TransactionalClassTest extends AbstractPersistTest {
       this.connectionProvider = connectionProvider;
     }
 
+    @Transactional
     public void addFoo(Foo foo) throws SQLException {
       add(connectionProvider.get(), foo);
     }
   }
 
-  @Transactional
   public static class SQLExceptionThrowingRepository implements FooAdder<SQLException> {
     private final Provider<Connection> connectionProvider;
 
@@ -102,13 +100,13 @@ public class TransactionalClassTest extends AbstractPersistTest {
       this.connectionProvider = connectionProvider;
     }
 
+    @Transactional
     public void addFoo(Foo foo) throws SQLException {
       add(connectionProvider.get(), foo);
       throw new SQLException();
     }
   }
 
-  @Transactional
   public static class RuntimeExceptionThrowingRepository implements FooAdder<IllegalStateException> {
     private final Provider<Connection> connectionProvider;
 
@@ -116,13 +114,13 @@ public class TransactionalClassTest extends AbstractPersistTest {
       this.connectionProvider = connectionProvider;
     }
 
+    @Transactional
     public void addFoo(Foo foo) throws SQLException {
       add(connectionProvider.get(), foo);
       throw new IllegalStateException();
     }
   }
 
-  @Transactional(rollbackOn = IOException.class)
   public static class CheckedExceptionThrowingRepository implements FooAdder<FileNotFoundException> {
     private final Provider<Connection> connectionProvider;
 
@@ -130,13 +128,13 @@ public class TransactionalClassTest extends AbstractPersistTest {
       this.connectionProvider = connectionProvider;
     }
 
+    @Transactional(rollbackOn = IOException.class)
     public void addFoo(Foo foo) throws SQLException, FileNotFoundException {
       add(connectionProvider.get(), foo);
       throw new FileNotFoundException();
     }
   }
 
-  @Transactional(rollbackOn = IOException.class, ignore = FileNotFoundException.class)
   public static class IgnoredCheckedExceptionThrowingRepository implements FooAdder<FileNotFoundException> {
     private final Provider<Connection> connectionProvider;
 
@@ -144,13 +142,13 @@ public class TransactionalClassTest extends AbstractPersistTest {
       this.connectionProvider = connectionProvider;
     }
 
+    @Transactional(rollbackOn = IOException.class, ignore = FileNotFoundException.class)
     public void addFoo(Foo foo) throws SQLException, FileNotFoundException {
       add(connectionProvider.get(), foo);
       throw new FileNotFoundException();
     }
   }
 
-  @Transactional(ignore = IllegalStateException.class)
   public static class IgnoredRuntimeExceptionThrowingRepository implements FooAdder<IllegalStateException> {
     private final Provider<Connection> connectionProvider;
 
@@ -158,6 +156,7 @@ public class TransactionalClassTest extends AbstractPersistTest {
       this.connectionProvider = connectionProvider;
     }
 
+    @Transactional(ignore = IllegalStateException.class)
     public void addFoo(Foo foo) throws SQLException {
       add(connectionProvider.get(), foo);
       throw new IllegalStateException();

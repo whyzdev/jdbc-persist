@@ -29,8 +29,7 @@ public class JdbcPersistModule extends PersistModule {
 
     bind(PersistService.class).to(JdbcPersistService.class);
     bind(UnitOfWork.class).to(JdbcPersistService.class);
-    bind(JdbcConnectionManager.class).toProvider(JdbcPersistService.class);
-    bind(Connection.class).toProvider(JdbcConnectionManager.class);
+    bind(Connection.class).toProvider(JdbcPersistService.class);
 
     requestInjection(transactionInterceptor);
 

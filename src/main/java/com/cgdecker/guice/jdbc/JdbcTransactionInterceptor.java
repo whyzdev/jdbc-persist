@@ -4,6 +4,7 @@ import com.google.inject.persist.Transactional;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.inject.Inject;
@@ -20,9 +21,9 @@ class JdbcTransactionInterceptor implements MethodInterceptor {
   public Object invoke(MethodInvocation invocation) throws Throwable {
     startWorkIfNecessary();
 
-    JdbcConnectionManager connectionManager = persistService.get();
+    Connection connection = persistService.get();
+    JdbcTransaction transaction = new JdbcTransaction(connection);
 
-    JdbcTransaction transaction = connectionManager.getTransaction();
     if (transaction.isActive()) {
       return invocation.proceed();
     }
