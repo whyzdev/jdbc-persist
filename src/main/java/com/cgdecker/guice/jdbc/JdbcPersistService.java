@@ -14,7 +14,7 @@ import javax.sql.DataSource;
  * @author cgdecker@gmail.com (Colin Decker)
  */
 class JdbcPersistService implements Provider<Connection>, PersistService, UnitOfWork {
-  private final DataSource dataSource;
+  /** VisibleForTesting */ final DataSource dataSource;
   private final ThreadLocal<Connection> connectionThreadLocal = new ThreadLocal<Connection>();
 
   private final ThreadLocal<Integer> beginCountThreadLocal = new ThreadLocal<Integer>();
