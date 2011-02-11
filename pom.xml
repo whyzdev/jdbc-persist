@@ -22,7 +22,7 @@
 
   <groupId>com.cgdecker.guice</groupId>
   <artifactId>jdbc-persist</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.1.0</version>
 
   <licenses>
     <license>
