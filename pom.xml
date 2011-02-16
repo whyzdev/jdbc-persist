@@ -108,7 +108,10 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.7</version>
         <configuration>
-          <maven.javadoc.links>http://aopalliance.sourceforge.net/doc/, http://google-guice.googlecode.com/svn/trunk/javadoc/</maven.javadoc.links>
+          <links>
+            <link>http://aopalliance.sourceforge.net/doc/</link>
+            <link>http://google-guice.googlecode.com/svn/trunk/javadoc/</link>
+          </links>
         </configuration>
       </plugin>
     </plugins>
