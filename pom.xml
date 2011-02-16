@@ -70,6 +70,8 @@
   <name>JDBC Persist</name>
   <description>An extension of Guice Persist that allows it to be used with JDBC.</description>
   <inceptionYear>2011</inceptionYear>
+  
+  <url>http://cgdecker.github.com/jdbc-persist</url>
 
   <licenses>
     <license>
@@ -98,13 +100,5 @@
     <system>GitHub</system>
     <url>https://github.com/cgdecker/jdbc-persist/issues</url>
   </issueManagement>
-
-  <distributionManagement>
-    <site>
-      <id>1</id>
-      <name>GitHub Site</name>
-      <url>http://cgdecker.github.com/jdbc-persist</url>
-    </site>
-  </distributionManagement>
 
 </project>
