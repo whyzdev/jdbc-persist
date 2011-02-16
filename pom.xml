@@ -35,6 +35,7 @@
     <maven.compiler.source>1.5</maven.compiler.source>
     <maven.compiler.target>1.5</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.javadoc.links>http://google-guice.googlecode.com/svn/trunk/javadoc/</maven.javadoc.links>
   </properties>
 
   <dependencies>
@@ -72,5 +73,11 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <distributionManagement>
+    <site>
+      <url>http://cgdecker.github.com/jdbc-persist</url>
+    </site>
+  </distributionManagement>
 
 </project>
