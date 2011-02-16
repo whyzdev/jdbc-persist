@@ -72,14 +72,6 @@
       <plugin>
         <artifactId>maven-site-plugin</artifactId>
         <version>3.0-beta-3</version>
-        <executions>
-          <execution>
-            <id>attach-descriptor</id>
-            <goals>
-              <goal>attach-descriptor</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
     </plugins>
   </build>
@@ -92,7 +84,7 @@
 
   <licenses>
     <license>
-      <name>Apache License, Version 2.0</name>
+      <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
     </license>
   </licenses>
@@ -106,6 +98,19 @@
       </roles>
     </developer>
   </developers>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.3.1</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.7</version>
+      </plugin>
+    </plugins>
+  </reporting>
 
   <scm>
     <url>https://github.com/cgdecker/jdbc-persist</url>
