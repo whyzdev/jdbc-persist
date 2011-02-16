@@ -1,0 +1,28 @@
+-classpath
+'E:/Colin/.hudson/jobs/jdbc-persist/workspace/target/classes;E:/Colin/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar;E:/Colin/.m2/repository/com/google/inject/extensions/guice-persist/3.0-rc2/guice-persist-3.0-rc2.jar;E:/Colin/.m2/repository/com/google/inject/guice/3.0-rc2/guice-3.0-rc2.jar;E:/Colin/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'E:/Colin/.hudson/jobs/jdbc-persist/workspace/src/main/java'
+-author
+-bottom
+'Copyright &#169; 2011. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'E:/Colin/.hudson/jobs/jdbc-persist/workspace/target/site/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'JDBC Persist 0.2.0-SNAPSHOT API'
+-link
+'http://aopalliance.sourceforge.net/doc'
+-link
+'http://google-guice.googlecode.com/svn/trunk/javadoc'
+-link
+'http://java.sun.com/javase/6/docs/api'
+-use
+-version
+-windowtitle
+'JDBC Persist 0.2.0-SNAPSHOT API'

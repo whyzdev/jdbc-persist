@@ -1,0 +1,30 @@
+-classpath
+'E:/Colin/.hudson/jobs/jdbc-persist/workspace/target/classes;E:/Colin/.hudson/jobs/jdbc-persist/workspace/target/test-classes;E:/Colin/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar;E:/Colin/.m2/repository/com/google/guava/guava/r08/guava-r08.jar;E:/Colin/.m2/repository/com/google/inject/extensions/guice-persist/3.0-rc2/guice-persist-3.0-rc2.jar;E:/Colin/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar;E:/Colin/.m2/repository/com/google/inject/guice/3.0-rc2/guice-3.0-rc2.jar;E:/Colin/.m2/repository/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar;E:/Colin/.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar;E:/Colin/.m2/repository/junit/junit/4.8.2/junit-4.8.2.jar;E:/Colin/.m2/repository/org/hsqldb/hsqldb/2.0.0/hsqldb-2.0.0.jar'
+-encoding
+'UTF-8'
+-protected
+-sourcepath
+'E:/Colin/.hudson/jobs/jdbc-persist/workspace/src/test/java'
+-author
+-bottom
+'Copyright &#169; 2011. All Rights Reserved.'
+-charset
+'UTF-8'
+-d
+'E:/Colin/.hudson/jobs/jdbc-persist/workspace/target/site/testapidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'JDBC Persist 0.2.0-SNAPSHOT Test API'
+-link
+'http://aopalliance.sourceforge.net/doc'
+-link
+'http://google-guice.googlecode.com/svn/trunk/javadoc'
+-link
+'../apidocs'
+-link
+'http://java.sun.com/javase/6/docs/api'
+-use
+-version
+-windowtitle
+'JDBC Persist 0.2.0-SNAPSHOT Test API'
