@@ -24,13 +24,6 @@
   <artifactId>jdbc-persist</artifactId>
   <version>0.2.0-SNAPSHOT</version>
 
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-    </license>
-  </licenses>
-
   <properties>
     <maven.compiler.source>1.5</maven.compiler.source>
     <maven.compiler.target>1.5</maven.compiler.target>
@@ -74,8 +67,42 @@
     </dependency>
   </dependencies>
 
+  <name>JDBC Persist</name>
+  <description>An extension of Guice Persist that allows it to be used with JDBC.</description>
+  <inceptionYear>2011</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Colin Decker</name>
+      <email>cgdecker@gmail.com</email>
+      <roles>
+        <role>Owner</role>
+      </roles>
+    </developer>
+  </developers>
+
+  <scm>
+    <url>https://github.com/cgdecker/jdbc-persist</url>
+    <connection>scm:git:git://github.com/cgdecker/jdbc-persist.git</connection>
+    <developerConnection>scm:git:git@github.com:cgdecker/jdbc-persist.git</developerConnection>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/cgdecker/jdbc-persist/issues</url>
+  </issueManagement>
+
   <distributionManagement>
     <site>
+      <id>1</id>
+      <name>GitHub Site</name>
       <url>http://cgdecker.github.com/jdbc-persist</url>
     </site>
   </distributionManagement>
