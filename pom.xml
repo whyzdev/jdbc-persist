@@ -67,10 +67,27 @@
     </dependency>
   </dependencies>
 
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.0-beta-3</version>
+        <executions>
+          <execution>
+            <id>attach-descriptor</id>
+            <goals>
+              <goal>attach-descriptor</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <name>JDBC Persist</name>
   <description>An extension of Guice Persist that allows it to be used with JDBC.</description>
   <inceptionYear>2011</inceptionYear>
-  
+
   <url>http://cgdecker.github.com/jdbc-persist</url>
 
   <licenses>
